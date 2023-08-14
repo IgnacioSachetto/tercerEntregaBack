@@ -1,5 +1,5 @@
 <div>
-  <h1>All products {{cid}}</h1>
+  <h1>All Products{{cid}}</h1>
   <table>
     <thead>
       <tr>
@@ -33,6 +33,7 @@
 
     purchaseLink.addEventListener("click", (event) => {
       event.preventDefault();
+
       const url = purchaseLink.getAttribute("href");
 
       fetch(url, {
@@ -40,11 +41,9 @@
         headers: {
           "Content-Type": "application/json",
         },
-
       })
         .then((response) => {
           if (response.ok) {
-
             console.log("Sucess");
           } else {
             console.error("Error");
