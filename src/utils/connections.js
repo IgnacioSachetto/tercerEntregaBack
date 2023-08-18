@@ -1,8 +1,11 @@
+import dotenv from 'dotenv';
 import { connect } from "mongoose";
+dotenv.config();
+
 export async function connectMongo() {
   try {
     await connect(
-      "mongodb+srv://nacho98msjz:qEe9Xlt1qe1cIbjM@cluster0.5c700yk.mongodb.net/"
+      process.env.MONGO_URL
     );
     console.log("plug to mongo!");
   } catch (e) {

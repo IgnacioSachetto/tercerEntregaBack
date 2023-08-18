@@ -1,5 +1,6 @@
 import MongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
 import express from 'express';
 import handlebars from 'express-handlebars';
 import session from 'express-session';
@@ -17,17 +18,23 @@ import { routerUsers } from './routes/users.router.js';
 import { viewsRouter } from './routes/views.router.js';
 import { connectMongo } from './utils/connections.js';
 
+dotenv.config();
+console.log();
+
 const app = express();
-const port = 8080;
+const port = process.env.PORT;
 
 connectMongo();
+
+
+
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(
   session({
-    store: MongoStore.create({ mongoUrl: 'mongodb+srv://Salocin0:bQJ5b9byQb6PlLWM@coder.qmxekir.mongodb.net/?retryWrites=true&w=majority', ttl: 86400 * 7 }),
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URL, ttl: 86400 * 7 }),
     secret: 'coder-secret',
     resave: true,
     saveUninitialized: true,
@@ -72,7 +79,7 @@ app.get('*', (req, res) => {
 });
 
 const httpServer = app.listen(port, () => {
-  console.log('Servidor escuchando en el puerto ' + port);
+  console.log('Servidor escuchando en el puerto ' + process.env.PORT);
 });
 
 const socketServer = new Server(httpServer);
