@@ -11,6 +11,7 @@ import { routerCarts } from './routes/cart.router.js';
 import { routerVistaCart } from './routes/cart.vista.router.js';
 import { routerViewChat } from './routes/chatRealTime.router.js';
 import { loginRouter } from './routes/login.router.js';
+import { routerViewMail } from './routes/mail.router.js';
 import { routerProductos } from './routes/products.router.js';
 import { routerVistaProducts } from './routes/products.vista.router.js';
 import { routerVistaRealTimeProducts } from './routes/realTimeProducts.vista.router.js';
@@ -59,7 +60,8 @@ app.use('/api/users', routerUsers);
 app.use('/vista/products', routerVistaProducts);
 app.use('/', viewsRouter);
 app.use('/api/sessions', loginRouter);
-app.use("/chatsocket", routerViewChat);
+app.use('/chatsocket', routerViewChat);
+app.use('/mail', routerViewMail)
 app.get('/api/sessions/github', passport.authenticate('github', { scope: ['user:email'] }));
 
 app.get('/api/sessions/githubcallback', passport.authenticate('github', { failureRedirect: '/error-autentificacion' }), (req, res) => {
@@ -79,6 +81,8 @@ app.get('*', (req, res) => {
     data: {},
   });
 });
+
+
 
 
 
