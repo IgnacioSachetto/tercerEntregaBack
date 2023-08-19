@@ -2,6 +2,7 @@ import { modelCart } from '../DAO/models/db/carts.model.db.js';
 //import { modelCart } from '../DAO/models/mem/carts.model.mem.js';
 import { modelProduct } from '../DAO/models/db/products.model.db.js';
 import { ticketsModel } from '../DAO/models/mongoose/tickets.model.js';
+import { sendPurchaseConfirmationEmail } from '../controllers/mail.controller.js';
 
 class CartService {
   validateId(id) {
@@ -172,6 +173,8 @@ class CartService {
     }
 
     await ticketsModel.create(ticket);
+
+    await sendPurchaseConfirmationEmail(ticket);
 
 
 

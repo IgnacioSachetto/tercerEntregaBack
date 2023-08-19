@@ -12,24 +12,30 @@ export const mailController = nodemailer.createTransport({
   },
 });
 
-export async function sendPurchaseConfirmationEmail(req, res) {
+export async function sendPurchaseConfirmationEmail(ticket) {
   try {
     const result = await mailController.sendMail({
       from: process.env.GOOGLE_EMAIL,
-      to: "nachosachetto1998@hotmail.com",
+      to: 'nachosachetto1998@hotmail.com',
       subject: "Compra Realizada",
       html: `
         <div>
-          <h1>Probando Compra</h1>
-          <p>Compra Realizada correctamente</p>
+          <h1>Compra Realizada</h1>
+          <p>¡Felicitaciones por tu compra!</p>
+          <p>Ticket detalles:</p>
+          <ul>
+            <li>Código: ${ticket.code}</li>
+            <li>Fecha y Hora de Compra: ${ticket.purchase_datetime}</li>
+            <li>Comprador: ${ticket.purchaser}</li>
+          </ul>
         </div>
       `,
     });
 
     console.log(result);
-    res.send("Email sent successfully");
+    console.log("Email sent successfully");
   } catch (error) {
     console.error("Error sending email:", error);
-    res.status(500).send("Error sending email");
+    console.log("Error sending email");
   }
 }
