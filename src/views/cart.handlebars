@@ -6,6 +6,8 @@
         <th>Title</th>
         <th>Description</th>
         <th>Price</th>
+        <th>Stock</th>
+        <th>quantity</th>
       </tr>
     </thead>
     <tbody id='dinamic-product-list'>
@@ -15,6 +17,9 @@
             <td>{{this.name}}</td>
             <td>{{this.description}}</td>
             <td>{{this.price}}</td>
+            <td>{{this.stock}}</td>
+            <td>{{this.quantity}}</td>
+
           </tr>
         {{/each}}
       {{else}}
@@ -45,6 +50,8 @@
         .then((response) => {
           if (response.ok) {
             console.log("Sucess");
+            window.location.href = '/vista/products';
+
           } else {
             console.error("Error");
           }

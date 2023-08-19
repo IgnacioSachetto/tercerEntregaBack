@@ -5,11 +5,11 @@ import express from 'express';
 import handlebars from 'express-handlebars';
 import session from 'express-session';
 import passport from 'passport';
-import { Server } from 'socket.io';
 import { iniPassport } from './config/passport.config.js';
 import { __dirname } from './dirname.js';
 import { routerCarts } from './routes/cart.router.js';
 import { routerVistaCart } from './routes/cart.vista.router.js';
+import { routerViewChat } from './routes/chatRealTime.router.js';
 import { loginRouter } from './routes/login.router.js';
 import { routerProductos } from './routes/products.router.js';
 import { routerVistaProducts } from './routes/products.vista.router.js';
@@ -17,6 +17,7 @@ import { routerVistaRealTimeProducts } from './routes/realTimeProducts.vista.rou
 import { routerUsers } from './routes/users.router.js';
 import { viewsRouter } from './routes/views.router.js';
 import { connectMongo } from './utils/connections.js';
+import { connectSocket } from './utils/socket-server.js';
 
 dotenv.config();
 console.log();
@@ -58,6 +59,7 @@ app.use('/api/users', routerUsers);
 app.use('/vista/products', routerVistaProducts);
 app.use('/', viewsRouter);
 app.use('/api/sessions', loginRouter);
+app.use("/chatsocket", routerViewChat);
 app.get('/api/sessions/github', passport.authenticate('github', { scope: ['user:email'] }));
 
 app.get('/api/sessions/githubcallback', passport.authenticate('github', { failureRedirect: '/error-autentificacion' }), (req, res) => {
@@ -78,45 +80,11 @@ app.get('*', (req, res) => {
   });
 });
 
+
+
 const httpServer = app.listen(port, () => {
   console.log('Servidor escuchando en el puerto ' + process.env.PORT);
 });
+connectSocket(httpServer);
 
-const socketServer = new Server(httpServer);
 
-socketServer.on('connection', (socket) => {
-  const pm = new ProductManager();
-  socket.on('new-product-created', (newProduct) => {
-    const productList = pm.getProducts();
-    var repeatcode = false;
-    productList.forEach((product) => {
-      if (newProduct.code == product.code) {
-        repeatcode = true;
-      }
-    });
-    if (repeatcode) {
-      socketServer.emit('repeat-code', repeatcode);
-    } else {
-      const productCreated = pm.addProduct(
-        newProduct.title,
-        newProduct.description,
-        newProduct.price,
-        newProduct.thumbnails,
-        newProduct.code,
-        newProduct.stock,
-        newProduct.status,
-        newProduct.category
-      );
-      if (productCreated) {
-        const productList = pm.getProducts();
-        socketServer.emit('products', productList);
-      } else {
-        socketServer.emit('products', productCreated);
-      }
-    }
-  });
-  socket.on('delete-product', async (idToDelete) => {
-    pm.deleteProduct(idToDelete);
-    socketServer.emit('delete-product-in-table', idToDelete);
-  });
-});

@@ -1,6 +1,6 @@
 import express from 'express';
-import { productService } from '../services/products.service.js';
 import { cartService } from '../services/carts.service.js';
+import { productService } from '../services/products.service.js';
 
 export const routerVistaProducts = express.Router();
 
@@ -33,6 +33,7 @@ routerVistaProducts.get('/', async (req, res) => {
       name: product.title,
       description: product.description,
       price: product.price,
+      stock: product.stock,
       id: product._id,
     })),
     pagingCounter: allProducts.pagingCounter,

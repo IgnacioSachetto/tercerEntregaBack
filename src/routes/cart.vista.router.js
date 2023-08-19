@@ -11,6 +11,8 @@ routerVistaCart.get("/:cid", async (req, res) => {
         name: product.id.title,
         description: product.id.description,
         price: product.id.price,
+        stock: product.id.stock,
+        quantity: product.quantity,
         id:product._id.toString()
       })),
       cid: cid,

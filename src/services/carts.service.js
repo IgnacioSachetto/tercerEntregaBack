@@ -39,10 +39,12 @@ class CartService {
   }
 
   async createCart(userid) {
+
     let product = new Array();
     let cartCreated = null;
     if (userid) {
       cartCreated = await modelCart.createCart(product, userid);
+      console.log(cartCreated);
     }
     return cartCreated;
   }
@@ -105,7 +107,7 @@ class CartService {
     return cart;
   }
 
-  async purchaseCart(id, email) {
+  async purchaseCart(id, email, idUser) {
     const ticket = {
         code: Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000,
         purchase_datetime: new Date(),
@@ -161,7 +163,10 @@ class CartService {
     cart.products = cart.products.filter(p => !updatedProducts.some(updatedProduct => updatedProduct._id.toString() === p.id._id.toString()));
 
     if (cart.products.length === 0) {
-        await this.deleteCart(id);
+      await this.deleteCart(id);
+
+      await this.createCart(idUser)
+
     } else {
         await this.updateCart(id, cart.products);
     }
@@ -169,10 +174,11 @@ class CartService {
     await ticketsModel.create(ticket);
 
 
+
     return ticket;
-}
+  }
 
 
-}
+  }
 
-export const cartService = new CartService();
+  export const cartService = new CartService();

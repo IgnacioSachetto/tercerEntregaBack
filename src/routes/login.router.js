@@ -28,6 +28,7 @@ loginRouter.post('/login', passport.authenticate('login', { failureRedirect: '/e
     _id: req.user._id.toString(),
   };
 
+
   return res.redirect('/vista/products');
 });
 

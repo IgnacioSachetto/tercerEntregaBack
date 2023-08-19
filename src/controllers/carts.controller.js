@@ -194,14 +194,17 @@ class CartController {
 
   async purchase(req, res) {
     try {
+
+
       const cid = req.params.cid;
-      const email= req.user.email
-      const ticket = await cartService.purchaseCart(cid,email);
-      return res.status(200).json({
-        status: 'success',
-        msg: 'compra realizada',
-        data: ticket,
-      });
+      const email = req.user.email;
+      const idUser = req.user.id; // Asegúrate de obtener el ID del usuario de la sesión o la autenticación
+      const purchaseResult = await cartService.purchaseCart(cid, email, idUser);
+
+      if (purchaseResult.sucess){
+        console.log("fue susceess")
+      }
+
     } catch (e) {
       console.log(e);
       return res.status(500).json({
@@ -211,6 +214,8 @@ class CartController {
       });
     }
   }
+
+
 }
 
 export const cartController = new CartController();
