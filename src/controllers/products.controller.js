@@ -1,5 +1,29 @@
 import { productService } from '../services/products.service.js';
+import { generateProduct } from '../utils/productsMocks.js';
+
 class ProductControler {
+
+
+  async getProductsByMock(req, res) {
+    try {
+      const products = [];
+
+      for (let i = 0; i < 100; i++) {
+        products.push(generateProduct());
+      }
+      return res.status(200).json({
+        status: 'success',
+        msg: 'found all products',
+        data: products,
+      });
+    } catch (e) {
+      CustomError.createError({
+        name: 'Error Del Servidor',
+        cause: 'Ocurrió un error inesperado en el servidor. La operación no pudo completarse.',
+        message: 'Lo sentimos, ha ocurrido un error inesperado en el servidor. Por favor, contacta al equipo de soporte.',
+      });
+    }
+  }
   async getAll(req, res) {
     try {
       const limit = req.query.limit || 5;
@@ -130,6 +154,7 @@ class ProductControler {
       });
     }
   }
+
 }
 
 export const productControler = new ProductControler();
